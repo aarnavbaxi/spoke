@@ -1,0 +1,35 @@
+{
+  "expo": {
+    "name": "Spoke",
+    "slug": "spoke",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0D0D1A"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.spoke.app",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "Spoke needs microphone access to record your speaking sessions.",
+        "NSSpeechRecognitionUsageDescription": "Spoke uses speech recognition to transcribe your sessions."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#0D0D1A"
+      },
+      "package": "com.spoke.app",
+      "permissions": ["RECORD_AUDIO"]
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}
