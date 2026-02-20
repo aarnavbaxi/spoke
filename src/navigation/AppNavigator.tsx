@@ -18,8 +18,7 @@ import PaywallScreen from '../screens/PaywallScreen';
 
 import { Colors } from '../theme/colors';
 import { AuthStackParamList, MainTabParamList, RootStackParamList } from './types';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Image, Animated, Easing, StyleSheet } from 'react-native';
 
 const AuthStack = createNativeStackNavigator<AuthStackParamList>();
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -87,19 +86,43 @@ function MainStackNavigator() {
 
 function AuthNavigator() {
   return (
-    <AuthStack.Navigator screenOptions={{ headerShown: false }}>
+    <AuthStack.Navigator screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
       <AuthStack.Screen name="Login" component={LoginScreen} />
-      <AuthStack.Screen name="Signup" component={SignupScreen} />
+      <AuthStack.Screen name="Signup" component={SignupScreen} options={{ gestureEnabled: false }} />
     </AuthStack.Navigator>
-  );
+  )
 }
 
 function LoadingScreen() {
+  const progress = React.useRef(new Animated.Value(0)).current;
+
+  React.useEffect(() => {
+    Animated.loop(
+      Animated.timing(progress, {
+        toValue: 1,
+        duration: 1400,
+        easing: Easing.inOut(Easing.ease),
+        useNativeDriver: false,
+      })
+    ).start();
+  }, []);
+
+  const barWidth = progress.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0%', '100%'],
+  });
+
   return (
-    <LinearGradient colors={['#0D0D1A', '#1A1A2E']} style={loadingStyles.container}>
-      <Text style={loadingStyles.logo}>Spoke</Text>
-      <ActivityIndicator color={Colors.primary} size="large" style={{ marginTop: 24 }} />
-    </LinearGradient>
+    <View style={loadingStyles.container}>
+      <Image
+        source={require('../../assets/word_logo.png')}
+        style={loadingStyles.logo}
+        resizeMode="contain"
+      />
+      <View style={loadingStyles.barTrack}>
+        <Animated.View style={[loadingStyles.barFill, { width: barWidth }]} />
+      </View>
+    </View>
   );
 }
 
@@ -116,6 +139,29 @@ export default function AppNavigator() {
 }
 
 const loadingStyles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  logo: { fontSize: 48, fontWeight: '800', color: Colors.primary, letterSpacing: -1 },
+  container: {
+    flex: 1,
+    backgroundColor: '#86D3FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logo: {
+    width: 480,
+    height: 260,
+  },
+  barTrack: {
+    position: 'absolute',
+    bottom: 60,
+    width: '70%',
+    height: 8,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 4,
+    overflow: 'hidden',
+  },
+  barFill: {
+    width: '60%',
+    height: '100%',
+    backgroundColor: '#649DFE',
+    borderRadius: 4,
+  },
 });
